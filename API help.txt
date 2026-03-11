@@ -1,0 +1,205 @@
+Rosmaster Serial Opened! Baudrate=115200
+Help on Rosmaster in module Rosmaster_Lib.Rosmaster_Lib object:
+
+class Rosmaster(builtins.object)
+ |  Rosmaster(car_type=1, com='/dev/myserial', delay=0.002, debug=False)
+ |
+ |  # V3.3.9
+ |
+ |  Methods defined here:
+ |
+ |  __del__(self)
+ |
+ |  __init__(self, car_type=1, com='/dev/myserial', delay=0.002, debug=False)
+ |      Initialize self. See help(type(self)) for the full signature.
+ |
+ |  clear_auto_report_data(self)
+ |      Clear cached data that was automatically sent by the MCU.
+ |
+ |  create_receive_threading(self)
+ |      Start the background thread that receives and processes incoming data.
+ |
+ |  get_accelerometer_data(self)
+ |      Return accelerometer data as `(a_x, a_y, a_z)`.
+ |
+ |  get_akm_default_angle(self)
+ |      Read the default front-wheel servo angle for the Ackermann R2 chassis.
+ |
+ |  get_battery_voltage(self)
+ |      Return the current battery voltage.
+ |
+ |  get_car_type_from_machine(self)
+ |      Read the current car type reported by the controller board.
+ |
+ |  get_gyroscope_data(self)
+ |      Return gyroscope data as `(g_x, g_y, g_z)`.
+ |
+ |  get_imu_attitude_data(self, ToAngle=True)
+ |      Return IMU attitude as `(yaw, roll, pitch)`.
+ |      `ToAngle=True` returns degrees. `ToAngle=False` returns radians.
+ |
+ |  get_magnetometer_data(self)
+ |      Return magnetometer data as `(m_x, m_y, m_z)`.
+ |
+ |  get_motion_data(self)
+ |      Return chassis motion data as `(val_vx, val_vy, val_vz)`.
+ |
+ |  get_motion_pid(self)
+ |      Return the motion PID parameters as `[kp, ki, kd]`.
+ |
+ |  get_motor_encoder(self)
+ |      Return encoder data for all four motors.
+ |
+ |  get_uart_servo_angle(self, s_id)
+ |      Read the angle of one bus servo.
+ |      `s_id` is the servo ID in the range `[1, 6]`.
+ |
+ |  get_uart_servo_angle_array(self)
+ |      Read all six bus-servo angles at once.
+ |      Returns `[xx, xx, xx, xx, xx, xx]`; a failed servo read is reported as `-1`.
+ |
+ |  get_uart_servo_value(self, servo_id)
+ |      Read the raw position value of a bus servo.
+ |      `servo_id` is in the range `[1, 250]`.
+ |      Returns the servo ID that responded and its current position value.
+ |
+ |  get_version(self)
+ |      Return the MCU firmware version, for example `1.1`.
+ |
+ |  reset_car_state(self)
+ |      Reset the chassis state: stop motion, turn lights off, and turn the buzzer off.
+ |
+ |  reset_flash_value(self)
+ |      Reset values stored in flash memory back to factory defaults.
+ |
+ |  set_akm_default_angle(self, angle, forever=False)
+ |      Set the default front-wheel angle for the Ackermann R2 chassis.
+ |      `angle` must be in the range `[60, 120]`.
+ |      `forever=True` saves the value to flash. `forever=False` applies it temporarily.
+ |      Flash writes take longer, so the library uses extra delay to reduce packet loss.
+ |      Temporary changes are faster but are lost after a restart.
+ |
+ |  set_akm_steering_angle(self, angle, ctrl_car=False)
+ |      Set steering relative to the configured Ackermann default angle.
+ |      Negative values turn left and positive values turn right.
+ |      `angle` must be in the range `[-45, 45]`.
+ |      `ctrl_car=False` adjusts only the servo angle.
+ |      `ctrl_car=True` adjusts the servo angle and also modifies left/right motor speed.
+ |
+ |  set_auto_report_state(self, enable, forever=False)
+ |      Enable or disable automatic data reporting from the MCU.
+ |      This is enabled by default; disabling it affects some read APIs.
+ |      When `enable=True`, the expansion board sends one packet every 10 ms,
+ |      cycling through four packet types, so each type refreshes every 40 ms.
+ |      When `enable=False`, no report packets are sent.
+ |      `forever=True` saves the setting to flash. `forever=False` applies it temporarily.
+ |
+ |  set_beep(self, on_time)
+ |      Control the buzzer.
+ |      `on_time=0` turns it off.
+ |      `on_time=1` keeps it on continuously.
+ |      `on_time>=10` turns it on for the given number of milliseconds.
+ |      `on_time` must be a multiple of 10 for timed operation.
+ |
+ |  set_car_motion(self, v_x, v_y, v_z)
+ |      Set chassis velocity in closed-loop motion mode.
+ |      Input ranges:
+ |      X3: `v_x=[-1.0, 1.0]`, `v_y=[-1.0, 1.0]`, `v_z=[-5, 5]`
+ |      X3PLUS: `v_x=[-0.7, 0.7]`, `v_y=[-0.7, 0.7]`, `v_z=[-3.2, 3.2]`
+ |      R2/R2L: `v_x=[-1.8, 1.8]`, `v_y=[-0.045, 0.045]`, `v_z=[-3, 3]`
+ |
+ |  set_car_run(self, state, speed, adjust=False)
+ |      Command basic chassis motion such as forward, reverse, lateral, or rotation.
+ |      `state=[0, 7]`: `0` stop, `1` forward, `2` backward, `3` left,
+ |      `4` right, `5` rotate left, `6` rotate right, `7` park.
+ |      `speed=[-100, 100]`; `0` stops the chassis.
+ |      `adjust=True` enables gyroscope-assisted direction control.
+ |      This gyro-assisted feature is documented but marked as not enabled.
+ |
+ |  set_car_type(self, car_type)
+ |      Set the car type.
+ |
+ |  set_colorful_effect(self, effect, speed=255, parm=255)
+ |      Run an RGB light-strip effect.
+ |      `effect=[0, 6]`: `0` stop, `1` flowing, `2` chase, `3` breathing,
+ |      `4` gradient, `5` starlight, `6` battery display.
+ |      `speed=[1, 10]`; smaller values make the effect change faster.
+ |      `parm` is an optional extra parameter. For example, with breathing mode
+ |      it can be used to select the breathing-light color.
+ |
+ |  set_colorful_lamps(self, led_id, red, green, blue)
+ |      Set RGB values on the programmable light strip.
+ |      Stop any RGB effect before using direct color control.
+ |      `led_id=[0, 13]` controls one LED by index.
+ |      `led_id=0xFF` controls all LEDs.
+ |      `red`, `green`, and `blue` are in the range `[0, 255]`.
+ |
+ |  set_motor(self, speed_1, speed_2, speed_3, speed_4)
+ |      Set raw motor PWM speed values without encoder-based speed feedback.
+ |      Each `speed_X` must be in the range `[-100, 100]`.
+ |
+ |  set_pid_param(self, kp, ki, kd, forever=False)
+ |      Set motion PID parameters used by `set_car_motion`.
+ |      These values affect how the chassis reaches target speed.
+ |      `kp`, `ki`, and `kd` are in the range `[0, 10.00]` and may be floats.
+ |      `forever=True` saves to flash. `forever=False` applies the values temporarily.
+ |      Flash writes take longer, so the library uses extra delay to reduce packet loss.
+ |      Temporary changes are faster but are lost after a restart.
+ |
+ |  set_pwm_servo(self, servo_id, angle)
+ |      Set one PWM servo angle.
+ |      `servo_id=[1, 4]`, `angle=[0, 180]`.
+ |
+ |  set_pwm_servo_all(self, angle_s1, angle_s2, angle_s3, angle_s4)
+ |      Set all four PWM servo angles at once.
+ |      Each `angle_sX` must be in the range `[0, 180]`.
+ |
+ |  set_uart_servo(self, servo_id, pulse_value, run_time=500)
+ |      Control a bus servo by raw pulse position.
+ |      `servo_id=[1, 255]`; `254` broadcasts to all connected servos.
+ |      `pulse_value=[96, 4000]` is the target position.
+ |      `run_time` is the move duration in milliseconds.
+ |      Shorter times make the servo move faster.
+ |      Valid `run_time` range is `[0, 2000]`.
+ |
+ |  set_uart_servo_angle(self, s_id, s_angle, run_time=500)
+ |      Control a bus servo by angle.
+ |      `s_id=[1, 6]`.
+ |      Angle limits: servos `1-4` use `[0, 180]`, servo `5` uses `[0, 270]`,
+ |      and servo `6` uses `[0, 180]`.
+ |      `run_time` is in milliseconds and must be in the range `[0, 2000]`.
+ |      Shorter times make the servo move faster.
+ |
+ |  set_uart_servo_angle_array(self, angle_s=[90, 90, 90, 90, 90, 180], run_time=500)
+ |      Set all manipulator bus-servo angles at once.
+ |
+ |  set_uart_servo_ctrl_enable(self, enable)
+ |      Enable or disable manipulator control commands.
+ |      `enable=True` sends control packets normally.
+ |      `enable=False` stops sending manipulator control packets.
+ |
+ |  set_uart_servo_id(self, servo_id)
+ |      Set the ID of a bus servo. Use this carefully.
+ |      `servo_id` must be in the range `[1, 250]`.
+ |      Make sure only one bus servo is connected before calling this method,
+ |      or every connected servo may be assigned the same ID.
+ |
+ |  set_uart_servo_offset(self, servo_id)
+ |      Set manipulator center-position offset values.
+ |      `servo_id=[0, 6]`; `0` restores all servos to factory defaults.
+ |
+ |  set_uart_servo_torque(self, enable)
+ |      Enable or disable bus-servo torque.
+ |      `enable=0` disables torque so the servo can be moved by hand,
+ |      but commands will no longer move it.
+ |      `enable=1` enables torque so commands move the servo and it cannot
+ |      be turned by hand.
+ |
+ |  ----------------------------------------------------------------------
+ |  Data descriptors defined here:
+ |
+ |  __dict__
+ |      Dictionary for instance variables.
+ |
+ |  __weakref__
+ |      List of weak references to the object.

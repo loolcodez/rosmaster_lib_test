@@ -1,0 +1,41 @@
+# Return the current battery voltage.
+get_battery_voltage(self)
+
+# Clear cached data that was automatically sent by the MCU.
+clear_auto_report_data(self)
+
+# Start the background thread that receives and processes incoming data.
+create_receive_threading(self)
+
+# Return encoder data for all four motors.
+get_motor_encoder(self)
+
+# Set raw motor PWM speed values without encoder-based speed feedback.
+# Each `speed_X` must be in the range `[-100, 100]`.
+set_motor(self, speed_1, speed_2, speed_3, speed_4)
+
+
+
+
+from Rosmaster_Lib import Rosmaster
+
+bot = Rosmaster()
+
+# Start the receive thread first, then give the board time to auto-report fresh data.
+bot.create_receive_threading()
+
+# get_motor_encoder() returns cumulative counts since boot.
+print('before:', bot.get_motor_encoder())
+
+# Run with speed 10 motor 1
+bot.set_motor(10, 0, 0, 0)
+time.sleep(0.3)
+print('running:', bot.get_motor_encoder())
+
+time.sleep(2)
+print('after 2s:', bot.get_motor_encoder())
+
+# Stop
+bot.set_motor(0, 0, 0, 0)
+time.sleep(0.2)
+print('stopped:', bot.get_motor_encoder())
